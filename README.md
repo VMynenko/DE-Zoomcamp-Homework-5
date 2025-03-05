@@ -46,3 +46,27 @@ print(f"The longest trip lasted: {max_trip_duration:.2f} hours")
 
 Answer:
 - `162`
+
+## Question 5: User Interface  
+Spark’s User Interface which shows the application's dashboard runs on which local port?    
+
+Answer:
+- `4040`
+
+## Question 6: Least frequent pickup location zone    
+Using the zone lookup data and the Yellow October 2024 data, what is the name of the LEAST frequent pickup location Zone?    
+```python
+zone_lookup_df = spark.read.option("header", "true").csv(zone_lookup_path)
+pickup_counts = df.groupBy("PULocationID").agg(count("*").alias("trip_count"))
+pickup_counts_with_zones = pickup_counts.join(zone_lookup_df, pickup_counts.PULocationID == zone_lookup_df.LocationID, "left")
+least_frequent_zone = pickup_counts_with_zones.orderBy(asc("trip_count")).select("Zone", "trip_count").limit(1)
+least_frequent_zone.show()
+```
+`+--------------------+----------+`  
+`|                Zone|trip_count|`  
+`+--------------------+----------+`  
+`|Governor's Island...|         1|`  
+`+--------------------+----------+`  
+
+Answer:
+- `Governor's Island/Ellis Island/Liberty Island`
